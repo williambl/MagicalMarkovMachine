@@ -2,6 +2,7 @@ import markovify
 import praw
 import sys
 import argparse
+import tweepy
 from progress.bar import Bar
 
 
@@ -12,15 +13,18 @@ inputType = ""
 inReddit = None
 inUser = None
 inPath = None
+count = 0
 
 # Command line arguments
-parser = argparse.ArgumentParser(description="Willbl3pic's Markov Chain sentence generator")
+parser = argparse.ArgumentParser(description="William Bradford Larcombe's Magical Markov Machine")
 
 parser.add_argument("-r", "--subreddit", help="uses a subreddit as material for the markov chain", metavar="SUBREDDIT", default="None")
 parser.add_argument("-u", "--reddit_user", help="uses a reddit user as material for the markov chain", metavar="USER", default="None")
 parser.add_argument("-f", "--file", help="uses a text file as material for the markov chain", metavar="PATH", default="None")
+parser.add_argument("-c", "--count", help="how many sentences to be generated", metavar="COUNT", default=0)
 args = parser.parse_args()
 
+count = int(args.count)
 if (args.subreddit != "None"):
   inputType = "subreddit"
   inReddit = args.subreddit
@@ -89,6 +93,8 @@ elif (inputType == "user" or inputType == "u" or inputType == "reddituser" or in
 else:
   print("Please type subreddit, reddit user or file.")
   sys.exit()
+if (count == 0):
+    count = int(input("Sentence count: "))
 
 print(text)
 print("\n ----------------------------------------------------------------------------------------------- \n")
@@ -97,5 +103,5 @@ print("\n ----------------------------------------------------------------------
 text_model = markovify.Text(text)
 
 # Print five randomly-generated sentences
-for i in range(5):
+for i in range(count):
     print(text_model.make_sentence())
