@@ -2,7 +2,6 @@ import markovify
 import praw
 import sys
 import argparse
-import tweepy
 from progress.bar import Bar
 
 
