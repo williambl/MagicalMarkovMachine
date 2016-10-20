@@ -40,15 +40,12 @@ count = int(args.count)
 if (args.subreddit != "None"):
     inputType = "subreddit"
     inReddit = args.subreddit
-    print(inReddit)
 elif (args.reddit_user != "None"):
     inputType = "user"
     inUser = args.reddit_user
-    print(inUser)
 elif (args.file != "None"):
     inputType = "file"
     inPath = args.file
-    print(inPath)
 else:
     inputType = input("Subreddit, reddit user or file? ")
 
@@ -98,8 +95,8 @@ def textFromUser(userIn):
 
 
 if (inputType == "subreddit"
-        or inputType == "s" or inputType == "r" or inputType == "reddit"
-        or inputType == "sub"):
+        or inputType == "s" or inputType == "r"
+        or inputType == "reddit" or inputType == "sub"):
     if (inReddit is None):
         inReddit = input("Subreddit: ")
     text = textFromSubreddit(inReddit)
