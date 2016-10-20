@@ -6,7 +6,7 @@ from progress.bar import Bar
 
 
 # Reddit instance and UserAgent
-UA = "Markov"
+UA = "William's MagicalMarkovMachine"
 r = praw.Reddit(UA)
 inputType = ""
 inReddit = None
