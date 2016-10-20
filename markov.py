@@ -75,7 +75,7 @@ def textFromFile(fileIn):
     try:
         with open(fileIn) as f:
             print("Reading file...")
-        text = f.read()
+            text = f.read()
     except FileNotFoundError:
         print("File not found. Please try again.")
         sys.exit()
