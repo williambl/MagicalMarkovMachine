@@ -3,7 +3,7 @@ import praw
 import sys
 import argparse
 from progress.bar import Bar
-
+import signal
 
 # Reddit instance and UserAgent
 UA = "William's MagicalMarkovMachine"
@@ -13,6 +13,16 @@ inReddit = None
 inUser = None
 inPath = None
 count = 0
+comment_count = 0
+
+
+# ctrl-C handling
+def handler(signum, frame):
+    print("\nCaught ^C, exiting...")
+    sys.exit()
+
+
+signal.signal(signal.SIGINT, handler)
 
 # Command line arguments
 parser = argparse.ArgumentParser(
@@ -34,6 +44,10 @@ parser.add_argument(
         "-c", "--count",
         help="how many sentences to be generated",
         metavar="COUNT", default=0)
+parser.add_argument(
+        "-C", "--Comment_count",
+        help="how many comments to be taken from reddit",
+        metavar="COMMENTCOUNT", default=0)
 args = parser.parse_args()
 
 count = int(args.count)
@@ -48,14 +62,15 @@ elif (args.file != "None"):
     inPath = args.file
 else:
     inputType = input("Subreddit, reddit user or file? ")
+comment_count = int(args.Comment_count)
 
 
 # Methods to get markov material
-def textFromSubreddit(subredditIn):
-    bar = Bar("Fetching comments from /r/" + subredditIn + "...", max=1000)
+def textFromSubreddit(subredditIn, comments):
+    bar = Bar("Fetching comments from /r/" + subredditIn + "...", max=comments)
     try:
         subreddit = r.get_subreddit(subredditIn)
-        comments = subreddit.get_comments(limit=1000)
+        comments = subreddit.get_comments(limit=comments)
         text = ""
         for comment in comments:
             text += comment.body + "\n"
@@ -79,11 +94,11 @@ def textFromFile(fileIn):
     return(text)
 
 
-def textFromUser(userIn):
+def textFromUser(userIn, comments):
     try:
         redditor = r.get_redditor(userIn)
-        bar = Bar("Fetching /u/" + userIn + "'s comments...", max=1000)
-        comments = redditor.get_comments(limit=1000)
+        bar = Bar("Fetching /u/" + userIn + "'s comments...", max=comments)
+        comments = redditor.get_comments(limit=comments)
         text = ""
         for comment in comments:
             text += comment.body + "\n"
@@ -99,7 +114,9 @@ if (inputType == "subreddit"
         or inputType == "reddit" or inputType == "sub"):
     if (inReddit is None):
         inReddit = input("Subreddit: ")
-    text = textFromSubreddit(inReddit)
+    if (comment_count == 0):
+        comment_count = int(input("Comment count: "))
+    text = textFromSubreddit(inReddit, comment_count)
 
 elif (inputType == "file" or inputType == "f"
         or inputType == "path" or inputType == "txt"):
@@ -112,7 +129,9 @@ elif (inputType == "user" or inputType == "u"
         or inputType == "reddit user"):
     if (inUser is None):
         inUser = input("User: ")
-    text = textFromUser(inUser)
+    if (comment_count == 0):
+        comment_count = int(input("Comment count: "))
+    text = textFromUser(inUser, comment_count)
 
 else:
     print("Please type subreddit, reddit user or file.")
