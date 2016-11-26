@@ -66,11 +66,11 @@ comment_count = int(args.Comment_count)
 
 
 # Methods to get markov material
-def textFromSubreddit(subredditIn, comments):
-    bar = Bar("Fetching comments from /r/" + subredditIn + "...", max=comments)
+def textFromSubreddit(subredditIn, commentcount):
+    bar = Bar("Fetching comments from /r/" + subredditIn + "...", max=commentcount)
     try:
         subreddit = r.get_subreddit(subredditIn)
-        comments = subreddit.get_comments(limit=comments)
+        comments = subreddit.get_comments(limit=commentcount)
         text = ""
         for comment in comments:
             text += comment.body + "\n"
@@ -94,11 +94,11 @@ def textFromFile(fileIn):
     return(text)
 
 
-def textFromUser(userIn, comments):
+def textFromUser(userIn, commentcount):
     try:
         redditor = r.get_redditor(userIn)
-        bar = Bar("Fetching /u/" + userIn + "'s comments...", max=comments)
-        comments = redditor.get_comments(limit=comments)
+        bar = Bar("Fetching /u/" + userIn + "'s comments...", max=commentcount)
+        comments = redditor.get_comments(limit=commentcount)
         text = ""
         for comment in comments:
             text += comment.body + "\n"
