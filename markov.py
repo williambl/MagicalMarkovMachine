@@ -7,7 +7,7 @@ import signal
 
 # Reddit instance and UserAgent
 UA = "William's MagicalMarkovMachine"
-r = praw.Reddit(UA)
+r = praw.Reddit("magicalmarkovmachine", user_agent=UA)
 inputType = ""
 inReddit = None
 inUser = None
@@ -69,8 +69,8 @@ comment_count = int(args.Comment_count)
 def textFromSubreddit(subredditIn, commentcount):
     bar = Bar("Fetching comments from /r/" + subredditIn + "...", max=commentcount)
     try:
-        subreddit = r.get_subreddit(subredditIn)
-        comments = subreddit.get_comments(limit=commentcount)
+        subreddit = r.subreddit(subredditIn)
+        comments = subreddit.comments(limit=commentcount)
         text = ""
         for comment in comments:
             text += comment.body + "\n"
@@ -96,9 +96,9 @@ def textFromFile(fileIn):
 
 def textFromUser(userIn, commentcount):
     try:
-        redditor = r.get_redditor(userIn)
+        redditor = r.redditor(userIn)
         bar = Bar("Fetching /u/" + userIn + "'s comments...", max=commentcount)
-        comments = redditor.get_comments(limit=commentcount)
+        comments = redditor.comments.new(limit=commentcount)
         text = ""
         for comment in comments:
             text += comment.body + "\n"
